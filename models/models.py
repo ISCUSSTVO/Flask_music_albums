@@ -21,8 +21,8 @@ class User(UserMixin, db.Model):
 class Artist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    image_url = db.Column(db.String(255)) # Ссылка на фото артиста
-    albums = db.relationship('Album', backref='author', lazy=True)
+    image_url = db.Column(db.String(255))
+    albums = db.relationship('Album', backref='author', lazy=True, cascade="all, delete-orphan")
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,12 +32,10 @@ class Album(db.Model):
     cover_url = db.Column(db.String(255))
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
     reviews = db.relationship('Review', backref='album', lazy=True)
-
-    # Динамический расчет рейтинга
     @property
     def rating(self):
         if not self.reviews:
-            return 5  # Если отзывов нет, рейтинг 0
+            return 5  
         
         total = sum(r.rating for r in self.reviews)
         return round(total / len(self.reviews))

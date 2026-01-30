@@ -2,14 +2,36 @@
 {% block content %}
 <div class="container" style="padding-top: 60px;">
     <div class="album-hero">
-        <img src="{{ url_for('static', filename='img/covers/' ~ album.title|slugify ~ '.jpeg') }}" class="main-cover">
+        <img src="{{ url_for('static', filename='img/covers/' ~ (album.cover_url if album.cover_url else 'default.jpeg')) }}" 
+             class="main-cover" 
+             onerror="this.src='/static/img/covers/default.jpeg';">
+        
         <div class="album-info">
-            <span class="genre-tag">{{ album.genre }}</span>
-            <h1>{{ album.title }}</h1>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <span class="genre-tag">{{ album.genre }}</span>
+                    <h1>{{ album.title }}</h1>
+                </div>
+                
+            
+                {% if current_user.is_authenticated %}
+                <form action="{{ url_for('media.delete_album', album_id=album.id) }}" method="POST" onsubmit="return confirm('Удалить этот альбом навсегда?');">
+                    <button type="submit" class="btn-logout" style="background: rgba(255, 77, 77, 0.2); color: #ff4d4d; border: 1px solid #ff4d4d; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
+                        🗑 Удалить альбом
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
             <p class="meta">
-                <a href="{{ url_for('main.artist_page', artist_id=album.author.id) }}">{{ album.author.name }}</a> • {{ album.year }}
+                <a href="{{ url_for('main.artist_page', artist_id=album.author.id) }}" style="color: #64ffda; text-decoration: none; font-weight: bold;">
+                    {{ album.author.name }}
+                </a> • {{ album.year }}
             </p>
-            <div class="big-rating">{{ "★" * (album.rating | int) }} <span class="num">{{ album.rating }}</span></div>
+            <div class="big-rating">
+                <span style="color: #ffd700;">{{ "★" * (album.rating | int) }}</span>
+                <span class="num" style="margin-left: 10px; opacity: 0.6;">{{ album.rating }}</span>
+            </div>
         </div>
     </div>
 
@@ -19,7 +41,7 @@
             <form method="POST" class="review-form">
                 <textarea name="text" placeholder="Твое мнение..." required></textarea>
                 <div class="form-footer">
-                    <input type="number" name="rating" min="1" max="5" value="5">
+                    <input type="number" name="rating" min="1" max="5" value="5" style="width: 60px; padding: 5px; border-radius: 4px; background: #1a2634; color: white; border: 1px solid #3d4d5f;">
                     <button type="submit" class="btn-primary">Отправить</button>
                 </div>
             </form>
@@ -27,7 +49,7 @@
             {% for review in album.reviews | reverse %}
             <div class="review-card">
                 <div class="rev-header">
-                    <span class="stars">{{ "★" * review.rating }}</span>
+                    <span class="stars" style="color: #ffd700;">{{ "★" * review.rating }}</span>
                     <span class="date">{{ review.created_at.strftime('%d.%m.%Y') }}</span>
                 </div>
                 <p>{{ review.text }}</p>

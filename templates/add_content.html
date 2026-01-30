@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 500px; margin: 40px auto;">
+    <h2 style="margin-bottom: 20px;">Управление каталогом</h2>
+    
+    <form method="POST" enctype="multipart/form-data" style="background: #2b3a4e; padding: 25px; border-radius: 10px; display: flex; flex-direction: column; gap: 15px;">
+        <label>Что вы хотите добавить?</label>
+        <select name="content_type" id="content_type" onchange="updateForm()" style="padding: 10px; background: #1a2634; color: white; border: 1px solid #3d4d5f; border-radius: 4px;">
+            <option value="artist">Нового артиста</option>
+            <option value="album">Новый альбом</option>
+        </select>
+
+        <div id="artist_section" style="display: flex; flex-direction: column; gap: 12px;">
+            <input type="text" name="name" placeholder="Имя артиста" style="padding: 10px; border-radius: 4px; border: 1px solid #3d4d5f; background: #1a2634; color: white;">
+            <label style="font-size: 0.9em; color: #a0aec0;">Фото артиста:</label>
+            <input type="file" name="artist_image" accept="image/*" style="color: #a0aec0;">
+        </div>
+
+        <div id="album_section" style="display: none; flex-direction: column; gap: 12px;">
+            <select name="artist_id" style="padding: 10px; background: #1a2634; color: white; border: 1px solid #3d4d5f; border-radius: 4px;">
+                <option value="">-- Выберите артиста --</option>
+                {% for artist in artists %}
+                <option value="{{ artist.id }}">{{ artist.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="title" placeholder="Название альбома" style="padding: 10px; border-radius: 4px; border: 1px solid #3d4d5f; background: #1a2634; color: white;">
+            <input type="number" name="year" placeholder="Год выпуска (напр. 2024)" style="padding: 10px; border-radius: 4px; border: 1px solid #3d4d5f; background: #1a2634; color: white;">
+            <input type="text" name="genre" placeholder="Жанр" style="padding: 10px; border-radius: 4px; border: 1px solid #3d4d5f; background: #1a2634; color: white;">
+            <input type="file" name="album_image" accept="image/*" style="color: #a0aec0;">
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 10px; padding: 12px; font-weight: bold;">Сохранить запись</button>
+    </form>
+</div>
+
+<script>
+function updateForm() {
+    const type = document.getElementById('content_type').value;
+    const artistSec = document.getElementById('artist_section');
+    const albumSec = document.getElementById('album_section');
+    
+    if (type === 'artist') {
+        artistSec.style.display = 'flex';
+        albumSec.style.display = 'none';
+    } else {
+        artistSec.style.display = 'none';
+        albumSec.style.display = 'flex';
+    }
+}
+</script>
+{% endblock %}

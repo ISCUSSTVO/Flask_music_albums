@@ -1,24 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="artist-header" style="background-image: linear-gradient(to bottom, rgba(18, 24, 33, 0.6), #121821), url('{{ url_for('static', filename='img/artists/' ~ artist.name|slugify ~ '.jpeg') }}');">
-    <div class="container">
-        <span class="badge">Исполнитель</span>
-        <h1>{{ artist.name }}</h1>
+<div class="artist-header" style="background-image: linear-gradient(to bottom, rgba(18, 24, 33, 0.7), #121821), url('{{ url_for('static', filename='img/artists/' ~ (artist.image_url if artist.image_url else 'default_artist.jpg')) }}');">
+    <div class="container artist-header-content">
+        <div class="artist-info-main">
+            <span class="badge">Исполнитель</span>
+            <h1>{{ artist.name }}</h1>
+        </div>
+        
+        {% if current_user.is_authenticated %}
+        <form action="{{ url_for('media.delete_artist', artist_id=artist.id) }}" method="POST" onsubmit="return confirm('Удалить артиста и ВСЕ его альбомы?');" class="admin-action">
+            <button type="submit" class="btn-delete-main">
+                <span class="icon">🗑</span> Удалить артиста
+            </button>
+        </form>
+        {% endif %}
     </div>
 </div>
 
 <div class="container">
-    <h2 style="margin: 40px 0 20px;">Дискография</h2>
+    <div class="section-header-inline">
+        <h2 style="margin: 40px 0 20px;">Дискография</h2>
+        
+        <form method="GET" action="{{ url_for('main.artist_page', artist_id=artist.id) }}" class="sort-form">
+            <select name="sort" onchange="this.form.submit()" class="select-styled">
+                <option value="rating" {% if request.args.get('sort') == 'rating' %}selected{% endif %}>Лучшие</option>
+                <option value="newest" {% if request.args.get('sort') == 'newest' %}selected{% endif %}>Сначала новые</option>
+                <option value="oldest" {% if request.args.get('sort') == 'oldest' %}selected{% endif %}>Сначала старые</option>
+            </select>
+        </form>
+    </div>
+
     <div class="grid">
-        {% for album in artist.albums %}
+        {% for album in albums %}
         <div class="card">
-            <a href="{{ url_for('main.album_page', album_id=album.id) }}">
-                <img src="{{ url_for('static', filename='img/covers/' ~ album.title|slugify ~ '.jpeg') }}" class="album-cover-mini">
-                <div class="card-header">
-                    <span class="year">{{ album.year }}</span>
+            {% if current_user.is_authenticated %}
+            <form action="{{ url_for('media.delete_album', album_id=album.id) }}" method="POST" onsubmit="return confirm('Удалить альбом?');" class="delete-album-form">
+                <button type="submit" class="btn-delete-small" title="Удалить альбом">×</button>
+            </form>
+            {% endif %}
+
+            <a href="{{ url_for('main.album_page', album_id=album.id) }}" class="card-link">
+                <div class="cover-wrapper">
+                    <img src="{{ url_for('static', filename='img/covers/' ~ (album.cover_url if album.cover_url else 'default.jpeg')) }}" 
+                         class="album-cover-mini" 
+                         alt="{{ album.title }}"
+                         onerror="this.src='/static/img/covers/default.jpeg';">
                 </div>
-                <h3>{{ album.title }}</h3>
-                <div class="rating">{{ "★" * (album.rating | int) }}</div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <span class="year">{{ album.year }}</span>
+                        <span class="genre-mini">{{ album.genre }}</span>
+                    </div>
+                    <h3>{{ album.title }}</h3>
+                    <div class="rating-stars">
+                        <span class="stars-gold">{{ "★" * (album.rating | int) }}</span>
+                        <span class="stars-gray">{{ "☆" * (5 - (album.rating | int)) }}</span>
+                    </div>
+                </div>
             </a>
         </div>
         {% endfor %}

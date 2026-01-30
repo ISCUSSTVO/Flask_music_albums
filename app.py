@@ -11,22 +11,21 @@ from controllers.auth_controller import auth_bp
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = 'super-secret-key-change-me' # Обязательно для сессий
+app.config['SECRET_KEY'] = 'super-secret-key-change-me' 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.root_path, 'instance', 'sqlite.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# --- Настройка логина ---
 login_manager = LoginManager()
-login_manager.login_view = 'auth.login' # Куда кидать юзера, если он не авторизован
+login_manager.login_view = 'auth.login' 
 login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Регистрация блюпринтов
+
 app.register_blueprint(main_bp)
 app.register_blueprint(media_bp)
 app.register_blueprint(auth_bp)
@@ -47,16 +46,14 @@ def slugify_filter(s):
     s = re.sub(r'[\s_-]+', '_', s)
     return s
 
-# Создание таблиц и админа
 with app.app_context():
     if not os.path.exists(os.path.join(app.root_path, 'instance')):
         os.makedirs(os.path.join(app.root_path, 'instance'))
     db.create_all()
-    
-    # Создаем админа, если нет
+
     if not User.query.filter_by(username='admin').first():
         admin = User(username='admin')
-        admin.set_password('admin') # Пароль: admin
+        admin.set_password('admin') 
         db.session.add(admin)
         db.session.commit()
         print("Admin created: user='admin', pass='admin'")

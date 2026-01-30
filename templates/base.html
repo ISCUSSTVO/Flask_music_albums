@@ -8,11 +8,14 @@
 <body>
     <header>
         <div class="container">
-            <h1>🎵 MusicCatalog</h1>
+            <a href="{{ url_for('main.index') }}" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.5rem;">🎵</span>
+                <h1 style="margin: 0; font-size: 1.2rem;">MusicCatalog</h1>
+            </a>
             <div style="display: flex; gap: 15px; align-items: center;">
                 {% if current_user.is_authenticated %}
                     <span>Привет, <b>{{ current_user.username }}</b></span>
-                    <a href="{{ url_for('media.seed_data') }}" class="btn-small">Seed Data</a>
+                    <a href="{{ url_for('media.add_content') }}" class="btn-small">Добавить контент</a>
                     <a href="{{ url_for('auth.logout') }}" class="btn-logout">Выйти</a>
                 {% else %}
                     <a href="{{ url_for('auth.login') }}" class="btn-primary">Вход для админа</a>
@@ -20,6 +23,19 @@
             </div>
         </div>
     </header>
-    {% block content %}{% endblock %}
+    <main class="container">
+        {% if request.path != url_for('main.index') %}
+        <div style="margin: 20px 0;">
+            <a href="javascript:history.back()" class="reset" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; color: #a0aec0; font-weight: 500;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Назад
+            </a>
+        </div>
+        {% endif %}
+
+        {# 2. Сюда залетает контент из index.html, album.html и т.д. #}
+        {% block content %}{% endblock %}
+    </main>
+
 </body>
 </html>
