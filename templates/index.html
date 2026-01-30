@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Музыкальный Каталог</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💿 Моя Коллекция</h1>
+            <a href="{{ url_for('media.seed_data') }}" class="btn-small">Заполнить данными (Test)</a>
+        </header>
+
+        <section class="controls">
+            <form method="GET" action="/">
+                <select name="genre" onchange="this.form.submit()">
+                    <option value="">Все жанры</option>
+                    {% for g in genres %}
+                    <option value="{{ g }}" {% if request.args.get('genre') == g %}selected{% endif %}>{{ g }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="sort_year" onchange="this.form.submit()">
+                    <option value="">Сортировка по году</option>
+                    <option value="desc" {% if request.args.get('sort_year') == 'desc' %}selected{% endif %}>Сначала новые</option>
+                    <option value="asc" {% if request.args.get('sort_year') == 'asc' %}selected{% endif %}>Сначала старые</option>
+                </select>
+                <a href="/" class="reset">Сброс</a>
+            </form>
+        </section>
+
+        <div class="grid">
+            {% for album in albums %}
+            <div class="card">
+                <div class="card-header">
+                    <span class="year">{{ album.year }}</span>
+                    <span class="genre">{{ album.genre }}</span>
+                </div>
+                <h3>{{ album.title }}</h3>
+                <p class="artist">{{ album.artist }}</p>
+                <div class="rating">
+                    {% for i in range(album.rating) %}★{% endfor %}
+                    {% for i in range(5 - album.rating) %}☆{% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <p style="text-align:center; width:100%;">Альбомов пока нет. Нажми "Заполнить данными".</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
