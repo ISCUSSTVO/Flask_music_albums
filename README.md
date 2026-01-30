@@ -36,7 +36,9 @@ pip install -r requirements.txt
 Для корректной работы загрузки изображений необходимо создать структуру директорий:
 
 Bash
+
 mkdir -p static/img/artists
+
 mkdir -p static/img/covers
 
 3. Запуск приложения
@@ -44,11 +46,3 @@ Bash
 python app.py
 Проект будет запущен по адресу: http://127.0.0.1:5000
 
-⚙️ Технические детали
-Backend: Flask + SQLAlchemy (SQLite).
-
-Auth: Flask-Login для доступа к функциям редактирования.
-
-Frontend: Современная темная тема на чистом CSS с использованием backdrop-filter и flexbox.
-
-Database: Реализована сложная сортировка через агрегатные функции SQL для вычисления среднего рейтинга.
