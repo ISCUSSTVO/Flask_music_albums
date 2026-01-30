@@ -1,181 +1,270 @@
 :root {
-    --bg-color: #212d3d;
+    --bg-color: #1a222d;
+    --bg-sidebar: #212d3d;
     --card-bg: #2b3a4e;
-    --text-main: #ffffff;
-    --text-muted: #a0aabf;
     --accent: #4da6ff;
     --accent-hover: #3395ff;
+    --text-main: #ffffff;
+    --text-muted: #a0aabf;
     --gold: #ffd700;
     --danger: #ff5c5c;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
     margin: 0;
-    padding: 20px;
-    line-height: 1.6;
+    padding: 0;
+    line-height: 1.5;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition);
 }
 
 header {
+    background: rgba(33, 45, 61, 0.8);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 30px;
+}
+
+header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 h1 {
-    font-weight: 300;
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin: 0;
-    letter-spacing: 1px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
 }
 
-.btn-small {
-    background-color: rgba(77, 166, 255, 0.1);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 8px 16px;
+.btn-small, .btn-primary {
+    background: var(--accent);
+    color: white;
+    padding: 8px 20px;
     border-radius: 20px;
-    text-decoration: none;
+    font-weight: 600;
     font-size: 0.9rem;
-    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
 }
 
 .btn-small:hover {
-    background-color: var(--accent);
-    color: white;
+    background: var(--accent-hover);
     box-shadow: 0 0 15px rgba(77, 166, 255, 0.4);
 }
 
+.btn-logout {
+    color: var(--danger);
+    font-size: 0.9rem;
+    margin-left: 15px;
+}
+
 .controls {
-    background-color: var(--card-bg);
+    background: var(--bg-sidebar);
     padding: 20px;
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 form {
     display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 15px;
     align-items: center;
-    width: 100%;
+    flex-wrap: wrap;
 }
 
 select {
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--bg-color);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
     padding: 10px 15px;
     border-radius: 8px;
     outline: none;
     cursor: pointer;
-    font-size: 0.95rem;
-    transition: border-color 0.2s;
-}
-
-select:focus {
-    border-color: var(--accent);
 }
 
 .reset {
     color: var(--text-muted);
-    text-decoration: none;
     font-size: 0.9rem;
-    margin-left: auto; 
-    transition: color 0.2s;
 }
 
-.reset:hover {
-    color: var(--danger);
+.home-section {
+    margin-bottom: 50px;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.artist-row {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+}
+
+.artist-item {
+    text-align: center;
+    min-width: 140px;
+}
+
+.avatar-wrapper img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid transparent;
+    transition: var(--transition);
+}
+
+.artist-item:hover img {
+    border-color: var(--accent);
+    transform: scale(1.05);
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 25px;
 }
 
 .card {
-    background-color: var(--card-bg);
-    border-radius: 16px;
-    padding: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    display: flex;
-    flex-direction: column;
+    background: var(--card-bg);
+    border-radius: 15px;
+    padding: 15px;
+    transition: var(--transition);
     position: relative;
-    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-    border-color: rgba(77, 166, 255, 0.3);
+    background: #364961;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.4);
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+.album-cover-mini {
     width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--accent), #b366ff);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.card h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist-name {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--accent);
 }
 
 .year {
-    background-color: rgba(255, 255, 255, 0.1);
     color: var(--text-muted);
-    padding: 3px 8px;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
     border-radius: 4px;
 }
 
-.genre {
-    color: var(--accent);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-size: 0.75rem;
-    align-self: center;
-}
-
-.card h3 {
-    margin: 0 0 5px 0;
-    font-size: 1.3rem;
-    color: var(--text-main);
-}
-
-.artist {
-    margin: 0 0 20px 0;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
-
 .rating {
-    margin-top: auto; 
     color: var(--gold);
-    font-size: 1.1rem;
-    letter-spacing: 3px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.album-hero {
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+    padding: 40px 0;
+}
+
+.main-cover {
+    width: 300px; /* или сколько там у тебя в дизайне */
+    height: 300px;
+    object-fit: cover; /* ВОТ ЭТО ГЛАВНОЕ: картинка обрежется под квадрат, а не сплющится */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.album-info h1 {
+    font-size: 3.5rem;
+    margin: 10px 0;
+}
+
+.review-card {
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 15px;
+    border-left: 4px solid var(--accent);
+}
+
+.review-form textarea {
+    width: 100%;
+    background: var(--bg-sidebar);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .album-hero {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .main-cover {
+        width: 200px;
+        height: 200px;
+    }
+    .album-info h1 {
+        font-size: 2.5rem;
+    }
 }

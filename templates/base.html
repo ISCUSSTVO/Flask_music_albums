@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>MusicCatalog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎵 MusicCatalog</h1>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                {% if current_user.is_authenticated %}
+                    <span>Привет, <b>{{ current_user.username }}</b></span>
+                    <a href="{{ url_for('media.seed_data') }}" class="btn-small">Seed Data</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn-logout">Выйти</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn-primary">Вход для админа</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+</html>

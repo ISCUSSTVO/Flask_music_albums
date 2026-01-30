@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="padding-top: 60px;">
+    <div class="album-hero">
+        <img src="{{ url_for('static', filename='img/covers/' ~ album.title|slugify ~ '.jpeg') }}" class="main-cover">
+        <div class="album-info">
+            <span class="genre-tag">{{ album.genre }}</span>
+            <h1>{{ album.title }}</h1>
+            <p class="meta">
+                <a href="{{ url_for('main.artist_page', artist_id=album.author.id) }}">{{ album.author.name }}</a> • {{ album.year }}
+            </p>
+            <div class="big-rating">{{ "★" * (album.rating | int) }} <span class="num">{{ album.rating }}</span></div>
+        </div>
+    </div>
+
+    <div class="content-split">
+        <div class="reviews-flow">
+            <h3>Рецензии</h3>
+            <form method="POST" class="review-form">
+                <textarea name="text" placeholder="Твое мнение..." required></textarea>
+                <div class="form-footer">
+                    <input type="number" name="rating" min="1" max="5" value="5">
+                    <button type="submit" class="btn-primary">Отправить</button>
+                </div>
+            </form>
+
+            {% for review in album.reviews | reverse %}
+            <div class="review-card">
+                <div class="rev-header">
+                    <span class="stars">{{ "★" * review.rating }}</span>
+                    <span class="date">{{ review.created_at.strftime('%d.%m.%Y') }}</span>
+                </div>
+                <p>{{ review.text }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

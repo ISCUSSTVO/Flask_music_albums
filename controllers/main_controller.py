@@ -1,24 +1,30 @@
-from flask import Blueprint, render_template, request
-from models.models import Album, db
+from flask import Blueprint, render_template, request, redirect, url_for
+from models.models import Artist, Album, Review, db
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
-    genre_filter = request.args.get('genre')
-    sort_year = request.args.get('sort_year')
+    artists = Artist.query.all()
+    recent_albums = Album.query.order_by(Album.id.desc()).all()
+    return render_template('index.html', artists=artists, albums=recent_albums)
 
-    query = Album.query
+@main_bp.route('/artist/<int:artist_id>')
+def artist_page(artist_id):
+    artist = Artist.query.get_or_404(artist_id)
+    return render_template('artist.html', artist=artist)
 
-    if genre_filter:
-        query = query.filter_by(genre=genre_filter)
-
-    if sort_year == 'asc':
-        query = query.order_by(Album.year.asc())
-    elif sort_year == 'desc':
-        query = query.order_by(Album.year.desc())
-
-    albums = query.all()
-    genres = [g[0] for g in db.session.query(Album.genre).distinct().all()]
-
-    return render_template('index.html', albums=albums, genres=genres)
+@main_bp.route('/album/<int:album_id>', methods=['GET', 'POST'])
+def album_page(album_id):
+    album = Album.query.get_or_404(album_id)
+    if request.method == 'POST':
+        new_review = Review(
+            text=request.form.get('text'),
+            rating=int(request.form.get('rating')),
+            album_id=album.id
+        )
+        db.session.add(new_review)
+        db.session.commit()
+        return redirect(url_for('main.album_page', album_id=album.id))
+    
+    return render_template('album.html', album=album)

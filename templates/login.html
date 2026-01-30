@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход для админа</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width: 400px; margin-top: 100px;">
+        <h2 style="text-align: center;">Вход в систему</h2>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div style="color: #ff5c5c; text-align: center; margin-bottom: 10px;">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" class="controls" style="flex-direction: column;">
+            <input type="text" name="username" placeholder="Логин" required style="padding: 10px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <input type="password" name="password" placeholder="Пароль" required style="padding: 10px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <button type="submit" class="btn-small" style="width: 100%; cursor: pointer;">Войти</button>
+        </form>
+        <p style="text-align: center;"><a href="/" style="color: #a0aabf;">Вернуться на главную</a></p>
+    </div>
+</body>
+</html>

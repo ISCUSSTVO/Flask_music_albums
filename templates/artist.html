@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="artist-header" style="background-image: linear-gradient(to bottom, rgba(18, 24, 33, 0.6), #121821), url('{{ url_for('static', filename='img/artists/' ~ artist.name|slugify ~ '.jpeg') }}');">
+    <div class="container">
+        <span class="badge">Исполнитель</span>
+        <h1>{{ artist.name }}</h1>
+    </div>
+</div>
+
+<div class="container">
+    <h2 style="margin: 40px 0 20px;">Дискография</h2>
+    <div class="grid">
+        {% for album in artist.albums %}
+        <div class="card">
+            <a href="{{ url_for('main.album_page', album_id=album.id) }}">
+                <img src="{{ url_for('static', filename='img/covers/' ~ album.title|slugify ~ '.jpeg') }}" class="album-cover-mini">
+                <div class="card-header">
+                    <span class="year">{{ album.year }}</span>
+                </div>
+                <h3>{{ album.title }}</h3>
+                <div class="rating">{{ "★" * (album.rating | int) }}</div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
